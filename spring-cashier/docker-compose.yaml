@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  redis:
+    image: redis
+    platform: linux/amd64
+    networks:
+      - network
+    ports:
+      - 6379:6379
+    restart: always  
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - /tmp:/tmp
+    ports:
+      - 3306:3306  
+    networks:     
+      - network
+    environment:
+      MYSQL_ROOT_PASSWORD: "welcome"
+    restart: always     
+  spring-cashier:
+    image: spring-cashier
+    depends_on:
+    - mysql    
+    volumes:
+      - /tmp:/tmp
+    networks:
+      - network 
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "student"
+      MYSQL_PASS: "sjsu"
+      REDIS_HOST: "redis"
+      REDIS_PASSWORD: "foobared"
+    restart: always     
+  lb:
+    image: eeacms/haproxy
+    depends_on:
+    - spring-cashier
+    ports:
+    - "80:5000"
+    - "1936:1936"
+    environment:
+      BACKENDS: "spring-cashier"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "true"
+      COOKIES_ENABLED: "false"
+      LOG_LEVEL: "info"
+    networks:
+      - network 
+  
+volumes:
+  schemas:
+    external: false
+
+networks:
+  network:
+    driver: bridge

@@ -1,0 +1,21 @@
+<!--about-us.html-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Welcome to Starbucks!</title>
+</head>
+<body>
+    <h1 align="center">Welcome to the Starbucks interface.</h1>
+    <p>
+        <div align="center">
+            <img src="/images/starbucks.jpg">
+        </div>
+        <div align="center">
+            <form name="form" th:object="${command}" method="get" th:action="@{/user/starbucks}"> 
+                <input type="submit" value="Click here to go to cashier"/>
+            </form>
+        </div>
+    </p>
+    
+</body>
+</html>
