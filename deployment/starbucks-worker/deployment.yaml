@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: starbucks-worker-pod
+  namespace: default
+spec:
+    containers:
+    - name: starbucks-worker
+      image: reddesigns/starbucks-worker:v5.0
+      ports:
+      - containerPort: 6060
+      env:
+        - name: SERVER_PORT
+          value: "6060"
+        - name: MYSQL_HOST
+          value: "10.121.32.3"
+        - name: MYSQL_USERNAME
+          value: "student"
+        - name: MYSQL_PASSWORD
+          value: "sjsu"
+        - name: MYSQL_SCHEMA
+          value: "10.104.6.180"
+        - name: RABBIT_HOST
+          value: "rabbit"
+        - name: RABBIT_USERNAME
+          value: "student"
+        - name: RABBIT_PASSWORD
+          value: "sjsu"

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-cashier-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: spring-cashier
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: spring-cashier
+    spec:
+      containers:
+      - name: spring-cashier
+        image: reddesigns/spring-cashier:v5.0
+        ports:
+        - containerPort: 9091
+        env:
+          - name: SERVER_PORT
+            value: "9091"
+          - name: MYSQL_HOST
+            value: "10.121.32.3"
+          - name: MYSQL_USER
+            value: "student"
+          - name: MYSQL_PASS
+            value: "sjsu"
+          - name: API_KEY
+            value: "2H3fONTa8ugl1IcVS7CjLPnPIS2Hp9dJ"
+          - name: API_HOST
+            value: "34.123.26.144/api"

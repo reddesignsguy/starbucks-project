@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-starbucks-api-deployment
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      name: spring-starbucks-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: spring-starbucks-api
+    spec:
+      containers:
+      - name: spring-starbucks-api
+        image: reddesigns/spring-starbucks-api:v5.0
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MYSQL_HOST
+            value: "10.121.32.3"
+          - name: MYSQL_USER
+            value: "student"
+          - name: MYSQL_PASS
+            value: "sjsu"
+          - name: MYSQL_SCHEMA
+            value: "starbucks"
+          - name: RABBIT_HOST
+            value: "10.104.6.180"
+          - name: RABBIT_USERNAME
+            value: "student"
+          - name: RABBIT_PASSWORD
+            value: "sjsu"

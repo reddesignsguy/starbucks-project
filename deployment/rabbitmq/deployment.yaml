@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbit-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec:
+      containers:
+        - name: rabbit
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 15672
+              name: management
+            - containerPort: 4370
+              name: port-4370
+            - containerPort: 5672
+              name: amqp
+          resources: {} # Define resource limits and requests if required
+      restartPolicy: Always

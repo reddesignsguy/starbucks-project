@@ -1,0 +1,23 @@
+_format_version: "1.1"
+
+services:
+- name: starbucks
+  protocol: http
+  host: starbucks-api
+  port: 8080
+  path: /
+  plugins:
+  - name: key-auth
+  routes:
+  - name: api
+    paths:
+    - /api
+
+consumers:
+- username: apiclient
+  keyauth_credentials:
+  - key: 2H3fONTa8ugl1IcVS7CjLPnPIS2Hp9dJ
+
+  # 1. Use the CONFIG COMMAND to send the yaml into the container!
+  # 2. Then reload
+  # ---- From lab #8

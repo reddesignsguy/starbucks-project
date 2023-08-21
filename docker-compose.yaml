@@ -1,0 +1,153 @@
+
+version: "3"
+
+services:
+  spring-cashier:
+    image: spring-cashier
+    platform: linux/amd64
+    depends_on:
+    - kong    
+    volumes:
+      - /tmp:/tmp
+    networks:
+      - starbucks 
+    environment:
+      SERVER_PORT: 9091
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "student"
+      MYSQL_PASS: "sjsu"
+      API_KEY: "2H3fONTa8ugl1IcVS7CjLPnPIS2Hp9dJ"      
+      API_HOST: "kong:8000/api"        
+    restart: always   
+  kong:
+    image: kong:2.4.0
+    platform: linux/amd64
+    depends_on:
+    - starbucks-service    
+    networks:
+      - starbucks     
+    restart: always  
+    ports:
+    - "80:8000"
+    - "443:8443"
+    - "8001:8001"
+    - "8444:8444"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: "/dev/stdout"
+      KONG_ADMIN_ACCESS_LOG: "/dev/stdout"
+      KONG_PROXY_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_ERROR_LOG: "/dev/stderr"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001, 0.0.0.0:8444 ssl"
+  jumpbox:
+    image: ubuntu
+    platform: linux/amd64
+    networks:
+      - starbucks     
+    restart: always  
+    entrypoint:
+      - "sleep"
+      - "3600"
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    networks:
+      - starbucks   
+    ports:
+      - 3306:3306   
+    environment:
+      MYSQL_ROOT_PASSWORD: "cmpe172"
+    restart: always     
+  starbucks-api:
+    image: spring-starbucks-api
+    platform: linux/amd64
+    depends_on:
+    - mysql    
+    networks:
+      - starbucks   
+    ports:
+      - 8080    
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_USER: "student"
+      MYSQL_PASS: "sjsu"
+      MYSQL_SCHEMA: "starbucks"
+      RABBIT_HOST: "rabbit"
+      RABBIT_USERNAME: "student"
+      RABBIT_PASSWORD: "sjsu" 
+    restart: always     
+  starbucks-service:
+    image: eeacms/haproxy
+    platform: linux/amd64
+    depends_on:
+    - starbucks-api
+    ports:
+    - "90:5000"
+    - "1936:1936"
+    environment:
+      HTTPCHK: "GET /ping"  # Makes LB allow health checks for /ping
+                            # From outside network, we can ping it
+      BACKENDS: "starbucks-api"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "true"
+      COOKIES_ENABLED: "false"
+      LOG_LEVEL: "info"
+    networks:
+      - starbucks  
+  lb:
+    image: eeacms/haproxy
+    platform: linux/amd64
+    depends_on:
+    - spring-cashier
+    ports:
+    - "100:5001"
+    - "1937:1937"
+    environment:
+      STATS_PORT: 1937 
+      FRONTEND_PORT: 5001
+      BACKENDS: "spring-cashier"
+      BACKENDS_PORT: "9091"
+      DNS_ENABLED: "true"
+      COOKIES_ENABLED: "false"
+      LOG_LEVEL: "info"
+    networks:
+      - starbucks 
+  rabbit:
+    image: rabbitmq:3-management
+    platform: linux/amd64
+    ports:
+      - "9090:15672"
+      - "4370:4370"   # change from 4369 to 4370
+      - "5672:5672"
+    networks:
+      - starbucks  
+    restart: always   
+  starbucks-worker:
+    image: starbucks-worker
+    platform: linux/amd64
+    depends_on:
+      - mysql
+      - rabbit
+    networks:
+      - starbucks
+    environment:
+      MYSQL_HOST: "mysql"
+      MYSQL_USERNAME: "student"
+      MYSQL_PASSWORD: "sjsu"
+      RABBIT_HOST: "rabbit"
+      RABBIT_USERNAME: "student"
+      RABBIT_PASSWORD: "sjsu"
+    restart: always
+    deploy:
+      mode: global
+      # replicas: 2
+
+volumes:
+  schemas:
+    external: false
+
+networks:
+  starbucks:
+    driver: bridge
+  
+

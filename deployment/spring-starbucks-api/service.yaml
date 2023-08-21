@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-cashier-service 
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9091
+  selector:
+    name: spring-cashier
