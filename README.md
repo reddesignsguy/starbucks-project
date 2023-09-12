@@ -1,15 +1,23 @@
 # Starbucks Cashier Simulator
-Starbucks Cashier Simulator simulates a real-life cashier system. The purpose of this project was to . 
-- what it does and the purpose
-- Implement an MVC design pattern
-- Work with different technologies in front-end, back-end, terminal, local deployment, and deployment to prod.
-   
-- how it's done: tech, system design
-- MySQL
-- 
+Starbucks Cashier Simulator simulates a real-life cashier system. The purpose of this project was to:
+- Implement an application system end-to-end while also prioritizing scalability
+- Work with a diverse tech stack
 
-Day 1:
---------------
+## Stack:
+- Spring Boot: Supports MVC architecture and has a built-in IoC container
+- MySQL (Docker Container): Store incomplete and completed orders, users, and user sessions
+- KongAPI + HAProxy: Supports load balancing + API management
+- RabbitMQ: Simulate a barista awaiting work (asynchronous, in a FIFO fashion)
+- Docker: Promotes scalability by separating responsibilities of other services in their own containers
+- Google Kubernetes Engine: Used to deploy application as an externally load-balanced ingress
+- Asta: Provides an overview of the system design and making use of external/internal ports
+
+## System Design
+<img width="1175" alt="image" src="https://github.com/reddesignsguy/starbucks-project/assets/49921782/0223d76d-8290-4f3e-ab08-7f1e22c406db">
+
+## Project Journal
+### Day 1:
+
 Today, I mostly focused on understanding how to tackle the project by taking notes and watching all the demos.
 
 My first goal is to set up deployment to Docker and GKE. 
@@ -22,8 +30,8 @@ c. What connects them is application.properties from the starbucks-api container
 Created the DB.
 <img width="1512" alt="image" src="https://user-images.githubusercontent.com/49921782/236121574-41cb0282-941b-4d70-b25f-36af0ffc3d51.png">
 
-Day 2: 
-----------
+### Day 2: 
+
 Tested communication between Kong and the starbucks-api, but on the starbucks network. Had to edit commands to make docker deployment work.
 <img width="1512" alt="image" src="https://user-images.githubusercontent.com/49921782/236349979-f2dce7b9-f109-46dc-9872-6d0e2757cd63.png">
 
@@ -40,15 +48,15 @@ Client successfully talks to Kong internally. The problem was, although I was ab
 
 Next goal is to start porting SpringMVC.
 
-Day 3:
-----------
+### Day 3:
+
 1. Ported from client -> cashier
 <img width="577" alt="image" src="https://user-images.githubusercontent.com/49921782/236747392-a2144da1-7a74-4d21-897e-7352fc5d3222.png">
 
 <img width="1512" alt="image" src="https://user-images.githubusercontent.com/49921782/236749423-ac075bfe-a4d7-4cc7-b58a-6c2c1b58e95b.png">
 
-Day 4:
--------------
+### Day 4:
+
 - Continuing porting today and tomorrow
 -       Enabling custom orders today
 
@@ -59,8 +67,8 @@ _HTML FORM_
 <img width="1512" alt="image" src="https://user-images.githubusercontent.com/49921782/236989744-6dce601c-a5be-47ce-9250-473d47e77cd8.png">
 
 
-Day 5
----------
+### Day 5
+
 Gonna try to finish porting today.
 
 - For some reason, I am only able to define the internal port for cashier, and NOT the external one for some reason, otherwise I get an error page.
@@ -81,8 +89,8 @@ Must finish:
 - Place order duplication
 - Get current register order
 
-Day 6
------------
+### Day 6
+
 Unfortunately, I did not have much time to do much, and I am still trying to restore the basic functionality that once existed in the old spring cashier.
 
 1. Clear order works
@@ -101,8 +109,8 @@ Must finish:
 - Researching Rabbit MQ
 - Fix unhandled exceptions: Invalid Size
 
-Day 7
---------
+### Day 7
+ 
 Fixed a bunch of things
 - RabbitMQ
 - Sender defined in API
@@ -114,8 +122,8 @@ Starbucks Worker
 Paid status reflected in cashier
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/57324ab5-6fcb-4c21-81fc-668079b87160">
 
-Day 8
-----------
+### Day 8
+
 - Sender is good. Uploads drink order with status "Order being processed" to DB, and sends message to queue.
 - Receiver is good. Reads queue, consuems message, and fulfills order. Updates drink order status to "FULFILLED" in DB when worker is done.
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/96f53410-611d-42dc-bf05-a178526f2227">
@@ -131,13 +139,13 @@ TO-DO:
 - User registration
 - GKE Deployment
 
-Day 9 
-----------
+### Day 9 
+
 - Removed hashmap implementation
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/288f3039-c3e7-4a36-83e4-0eba3268d507">
 
-Day 10
-------
+### Day 10
+
 User registration/login/logout
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/b259f020-6537-4666-9f5b-bd6d3a88ab6e">
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/8cc67c21-da5d-4594-9a6b-2c6c19ef6d53">
@@ -147,8 +155,8 @@ Active Orders DB to replace Hashamp (previous implementation did not work)
 <img width="1512" alt="image" src="https://github.com/nguyensjsu/cmpe172-reddesignsguy/assets/49921782/91869daa-ac3a-4d0d-a20a-6fe3f7e2d4f9">
 
 
-Day 11
-----------
+### Day 11
+
 Overall, I'm finishing up and tweaking the little things that are needed for final deployment such as..
 - Port mapping
 - Load balancing cashier
