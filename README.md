@@ -1,7 +1,12 @@
-# CMPE 172 Project Journal
-
-TO-DO: 
-- Cashier -> change user/password to not be admin/cmpe172
+# Starbucks Cashier Simulator
+Starbucks Cashier Simulator simulates a real-life cashier system. The purpose of this project was to . 
+- what it does and the purpose
+- Implement an MVC design pattern
+- Work with different technologies in front-end, back-end, terminal, local deployment, and deployment to prod.
+   
+- how it's done: tech, system design
+- MySQL
+- 
 
 Day 1:
 --------------
